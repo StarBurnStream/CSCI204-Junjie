@@ -1,2 +1,0 @@
-# CSCI204
-CSCI 204 Project
