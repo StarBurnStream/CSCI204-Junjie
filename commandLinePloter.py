@@ -47,6 +47,8 @@ class CommandLinePloter:
                 else:
                     self.plotString += '{:>8}'.format(int(ymax - i * self.yIncrement))
                     self.plotString += yAxis[i] + '\n'
+                    
+
 
         ### uncomment the following line to print out the 2D plane.
         ### print(self.plotString)
@@ -95,10 +97,14 @@ class CommandLinePloter:
                     rowList[j] += '    '
 
         self.plotString = '\n'.join(rowList)
+        self.plotString+='\n\t '
+        for i in range(1,11):
+            self.plotString +='{:>3}'.format(' ')+ str(i)        
         print(self.plotString)
         print('\n\n')
         self.plotString = ''
 
+        
     def twoDBar(self, yList, xList = None):
         """
         This method takes in one list and another optional list as inputs, using
@@ -143,6 +149,11 @@ class CommandLinePloter:
                     rowList[j] += '    '
 
         self.plotString = '\n'.join(rowList)
+        self.plotString+='\n\t '
+        for i in range(1,11):
+            self.plotString +='{:>3}'.format(' ')+ str(i)        
         print(self.plotString)
         print('\n\n')
+
+
         self.plotString = ''
