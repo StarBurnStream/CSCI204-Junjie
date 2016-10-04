@@ -4,6 +4,12 @@ import tkinter
 
 
 class UserGUI:
+    '''
+    TK is a user interface module. I can use a label to store a string.
+    I can use entry to allow user to input something.
+    I can use button to create a button which may run some function when clicked.
+    I can use grid or pack to arrange different stuff in the frame.
+    '''
     def __init__(self, master):
         self.master = master
         master.title("UserGUI")
