@@ -1,3 +1,6 @@
+from sLink import *
+
+
 class BasicStats:
     """
     This class performs basic statistical analysis to the input list/dictionary.
@@ -5,6 +8,30 @@ class BasicStats:
     def __init__(self):
         pass
 
+    def slinkFreq(self, freqList):
+        """
+        This method takes in a list of words and returns a head of a linked list,
+        whose data is a list of information, with the first one the word and the
+        second one the number of that word.
+        """
+        '''
+        Runtime of this method is O(n^2), where n is the length of freqList.
+        '''
+        freqDict = {}
+
+        for keys in freqList:
+            if freqDict.get(keys) == None:
+                freqDict[keys] = freqList.count(keys)
+        aSLink=SLink()
+        for keys in freqDict:
+            aSLink.add(keys)
+        node=aSLink.head
+        while node!=None:
+            node.data.append(freqDict[node.data[0]])
+            node=node.next
+        
+        return aSLink.head
+    
     def createFreqMap(self, freqList):
         """
         This method takes in a list of words and returns a dictionary, whose
@@ -47,6 +74,27 @@ class BasicStats:
                     topDict[keys] = freqDict[keys]
                     del topDict[minKey]
         return topDict
+
+    def LLTopN(self,head,n):
+        node=head
+        aSlink=SLink()
+        for i in range(n):
+            aSlink.add(node.data[0])
+            aSlink.head.data.append(node.data[1])
+            node=node.next
+        while node!=None:
+            sNode=aSlink.head
+            state=False
+            while sNode!=None and state==False:
+                if node.data[1]>sNode.data[1]:
+                    aSlink.remove(sNode.data[0])
+                    aSlink.add(node.data[0])
+                    aSlink.head.data.append(sNode.data[1])
+                    state=True
+                else:
+                    sNode=sNode.next
+            node=node.next
+        return aSlink.head
 
     def bottomN(self, freqDict, n):
         """

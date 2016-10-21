@@ -1,40 +1,43 @@
+from sStack import *
+
 class Node:
-    next = None
-    data = None
+    def __init__(self):
+        self.next = None
+        self.data = []
 
 class SLink:
-    head = None
-    elist = []
-    size = 0
-
-    def __init__(self, size=0):
-        #?Come back and optimize startup
-        pass
+    def __init__(self):
+        self.head=None
+        self.size=0
+        aStack=SStack()
+        for i in range(100):
+            node=Node()
+            aStack.push(node)
+        self.stack=aStack
 
     def __len__(self):
         return self.size
 
 
-    def add(self, value):
-        #Adds a node to the head
-        if(len(self.elist) > 0):
-            newNode = self.elist.pop()
-            newNode.data = value
-            newNode.next = self.head
-            self.head = newNode
-            self.size += 1
-        else:
+    def add(self, data):
+        if self.stack.size==0:
             newNode = Node()
-            newNode.next = self.head
-            newNode.data = value
-            self.head = newNode
-            self.size += 1
 
-    def remove(self, value):
+        else:
+            newNode=self.stack.pop()
+
+        newNode.data.append(data)
+        newNode.next = self.head
+        self.head = newNode
+        self.size += 1
+
+
+            
+    def remove(self, data):
         #Removes a node from the list
         prunner = None
         runner = self.head
-        while runner != None and runner.data != value:
+        while runner != None and runner.data[0] != data:
             prunner = runner
             runner = runner.next
 
@@ -46,11 +49,12 @@ class SLink:
         if runner == self.head:
             #head case
             self.head = runner.next
-            del runner
         else:
             #nonhead case
             prunner.next = runner.next
-            del runner
+        runner.data=[]
+        runner.next=None
+        self.stack.push(runner)
 
     def __iter__(self):
         return SLinkIterator(self.head)
@@ -71,3 +75,14 @@ class SLinkIterator:
             item = self.runner.data
             self.runner = self.runner.next
             return item
+
+
+def main():
+    a=SLink()
+    a.add('a')
+    print(a.head.data)
+    a.add('b')
+    
+    print(a.head.data)
+    print(a.head.next.data)
+#main()
