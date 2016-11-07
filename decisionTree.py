@@ -101,13 +101,6 @@ def getDif(twoDlist, attrCol):
         entropyList.append(entropy*entire/len(twoDlist))
     return sum(entropyList), attrDict
 
-def main():
-    twoDlist = [['no', 'small'], ['no', 'small'], ['yes', 'small'], ['yes', 'medium'], ['yes', 'large'], ['no', 'medium'], ['no', 'large'], ['no', 'large'], ['yes', 'medium'], ['yes', 'large'], ['no', 'small'], ['no', 'small'], ['no', 'small'], ['no', 'medium'], ['no', 'medium']]
-
-    print(getDif(twoDlist, 1))
-
-
-
 def calculation(oneDlist, twoDlist):
     minIndex = 1
     minEntropy, attrDict = getDif(twoDlist, minIndex)
