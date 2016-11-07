@@ -75,9 +75,6 @@ class DecisionTree:
 
         return twoDlist
 
-    def prefix(self):
-
-
 
 def getDif(twoDlist, attrCol):
     #attrDict是attrCOl这一列有几个不同的东西如small，medium，large

@@ -25,5 +25,57 @@ def main():
 
     print(dt.eval(cList))
 
+    prefix(dt.root)
+    postfix(dt.root)
+
+def prefix(root):
+    if root == None:
+        return
+
+    else:
+        try:
+            f = open('prefix.txt', 'r')
+            text = f.read()
+            text += root.data + '\n'
+            f.close()
+        except:
+            pass
+
+        f = open('prefix.txt', 'w')
+
+        try:
+            f.write(text)
+        except:
+            f.write(root.data + '\n')
+
+        f.close()
+
+        for i in root.children:
+            prefix(i)
+
+def postfix(root):
+    if root == None:
+        return
+
+    else:
+        for i in root.children:
+            postfix(i)
+
+        try:
+            f = open('postfix.txt', 'r')
+            text = f.read()
+            text += root.data + '\n'
+            f.close()
+        except:
+            pass
+
+        f = open('postfix.txt', 'w')
+
+        try:
+            f.write(text)
+        except:
+            f.write(root.data + '\n')
+
+        f.close()
 
 main()

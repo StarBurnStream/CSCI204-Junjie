@@ -1,0 +1,14 @@
+MarkTwain
+genre
+Poe
+genre
+Poe
+genre
+Poe
+genre
+JamesJoyce
+genre
+Poe
+genre
+JamesJoyce
+year
