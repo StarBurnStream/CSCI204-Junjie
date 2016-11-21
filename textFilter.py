@@ -1,88 +1,84 @@
 import document
-import sentence
 
 class TextFilter:
-    def __init__(self,aDocument,aList):
-        self.filtList=aList
-        self.document=aDocument
-        self.sentence=self.document._Document__sentence
+    """
+    This class takes a document and a list of strings (filters to be applied),
+    and applies the filters in the list to the document.
+    """
+    def __init__(self, doc, filterList):
+        self.doc = doc
+        self.filterList = filterList
 
-    def normSpace(self):
-        for s in range(len(self.sentence)):
-            aList=self.sentence[s].sentence.split()
-            newS=''
-            for i in aList:
-                newS+=i+' '
-            
-            self.sentence[s].sentence=newS[:-1]
-            
+    def apply(self):
+        """
+        Applies filterList, which may include: normalize whitespace, normalize
+        case, strip null characters, and strip numbers.
+        """
+        for f in self.filterList:
+            if f == 'normalize whitespace':
+                self.normalizeWhitespace()
+            elif f == 'normalize case':
+                self.normalizeCase()
+            elif f == 'strip null characters':
+                self.stripNull()
+            elif f == 'strip numbers':
+                self.stripNumbers()
+            elif f == 'strip common words':
+                self.stripFile()
+            else:
+                print(f + ' is not a valid filter!')
 
-    def normCase(self):
-        for s in range(len(self.sentence)):
-            self.sentence[s].sentence=self.sentence[s].sentence.lower()
-            
+    def normalizeWhitespace(self):
+        """
+        This method deletes all extra whitespaces, and convert any returns to
+        a single white space.
+        """
+        for i in range(len(self.doc._Document__sentence)):
+            self.doc._Document__sentence[i].sentence = ' '.join(self.doc._Document__sentence[i].sentence.split())
 
-    def deleteNull(self):
-        for s in range(len(self.sentence)):
-            #97,122 65,90 48,58
-            sen=self.sentence[s].sentence
-            newSen=''
-            for i in range(len(sen)):
-                if ord(sen[i]) in range(97,123) or ord(sen[i]) in range(65,91) or ord(sen[i]) in range(48,58) or ord(sen[i]) == 32:
-                   newSen+=sen[i]
-            self.sentence[s].sentence=newSen
+    def normalizeCase(self):
+        """
+        This method converts any uppercase letters to lowercase.
+        """
+        for i in range(len(self.doc._Document__sentence)):
+            self.doc._Document__sentence[i].sentence = self.doc._Document__sentence[i].sentence.lower()
 
-    def stripNum(self):
-        for s in range(len(self.sentence)):
-            sen=self.sentence[s].sentence
-            newSen=''
-            for i in sen:
-                #print(i,ord(i))
-                if ord(i) not in range(48,58):
-                    newSen+=i
-            self.sentence[s].sentence=newSen
+    def stripNull(self):
+        """
+        This method deletes all special characters that are not in the standard
+        ASCII set of letters and numbers.
+        """
+        for i in range(len(self.doc._Document__sentence)):
+            self.doc._Document__sentence[i].sentence = ''.join([char for char in self.doc._Document__sentence[i].sentence if 97 <= ord(char) <= 122 or 65 <= ord(char) <= 90 or 48 <= ord(char) <= 57 or ord(char) == 32])
+
+    def stripNumbers(self):
+        """
+        This method deletes all numbers from the document.
+        """
+        for i in range(len(self.doc._Document__sentence)):
+            self.doc._Document__sentence[i].sentence = ''.join([char for char in self.doc._Document__sentence[i].sentence if char not in '0123456789'])
 
     def stripFile(self):
-        '''
-        Should be used after deleteNull and no need to strip space any more!
-        '''
-        file = open('filterwords.txt')
+        """
+        This method opens a file of common words to be striped out.
+        Note: this should be used after stripNull was called.
+              this method also strips out all extra whitespaces.
+        """
+        file = open('filterwords.txt', 'r')
         text = file.read()
         wordList = text.split()
-        for i in range(len(self.sentence)):
-            sen = self.sentence[i].sentence
-            words = sen.split()
-            sen = ' '.join([ x for x in words if x not in wordList])
-                
 
-    
-    def apply(self):
-        for s in self.filtList:
-            if s=='normSpace':
-                self.normSpace()
-                #print('1')
-            elif s=='normCase':
-                self.normCase()
-                #print('2')
-            elif s=='deleteNull':
-                self.deleteNull()
-                #print('3')
-            elif s=='stripNum':
-                self.stripNum()
-                #print('4')
-        return self.document
-    
+        for i in range(len(self.doc._Document__sentence)):
+            words = self.doc._Document__sentence[i].sentence.split()
+            self.doc._Document__sentence[i].sentence = ' '.join([word for word in words if word not in wordList])
+
 def main():
-    filename='1.txt'
-    a=document.Document(filename)
-    a.generateWhole()
-    #b=TextFilter(a,['normSpace','normCase','deleteNull','stripNum'])
-    b=TextFilter(a,['stripFile'])
-    b.apply()
-    
-    for i in a._Document__sentence:
-        
+    d = document.Document('test.txt')
+    d.generateWhole()
+    #t = TextFilter(d, ['normalize whitespace', 'normalize case', 'strip null characters', 'strip numbers'])
+    t = TextFilter(d, ['strip common words'])
+    t.apply()
+    for i in d._Document__sentence:
         print(i.sentence)
 
-  
 main()

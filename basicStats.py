@@ -1,86 +1,5 @@
-from sLink import *
+import sllink, sStack
 import random
-
-'''
-def fixDown(wlist, hlist, i):
-    if i * 2 >= len(hlist):
-        return wlist,hlist
-
-    if i * 2 + 1 == len(hlist) or hlist[i*2] >= hlist[i*2+1]:
-        if hlist[i*2] > hlist[i]:
-            value = hlist[i]
-            string = wlist[i]
-            hlist[i] = hlist[i*2]
-            wlist[i] = wlist[i*2]
-            hlist[i*2] = value
-            wlist[i*2] = string
-            return fixDown(wlist,hlist, i*2)
-        else:
-            return wlist,hlist
-
-    elif hlist[i*2] < hlist[i*2+1]:
-        if hlist[i*2+1] > hlist[i]:
-            value = hlist[i]
-            hlist[i] = hlist[i*2+1]
-            hlist[i*2+1] = value
-            string = wlist[i]
-            wlist[i] = wlist[i*2+1]
-            wlist[i*2+1] = string
-            return fixDown(wlist,hlist, i*2+1)
-        else:
-            return wlist,hlist
-'''
-
-def parent(index):
-    if index <= 1:
-        return -1
-    else:
-        return index // 2
-
-def leftChild(index):
-    return 2 * index
-
-def rightChild(index):
-    return 2 * index + 1
-
-def fixDown(wlist, hlist, i):
-    if leftChild(i) >= len(wlist):        
-        return wlist,hlist
-
-    if leftChild(i) < len(wlist) and hlist[leftChild(i)] > hlist[i]:
-        value = hlist[i]
-        hlist[i] = hlist[leftChild(i)]
-        hlist[leftChild(i)] = value
-        string = wlist[i]
-        wlist[i] = wlist[leftChild(i)]
-        wlist[leftChild(i)] = string
-        #print(wlist,hlist)
-
-    if rightChild(i) >= len(wlist):
-        return wlist, hlist
-    
-    if rightChild(i) < len(wlist) and hlist[rightChild(i)] > hlist[i]:
-        value = hlist[i]
-        hlist[i] = hlist[rightChild(i)]
-        hlist[rightChild(i)] = value
-        string = wlist[i]
-        wlist[i] = wlist[rightChild(i)]
-        wlist[rightChild(i)] = string
-        #print(wlist,hlist)
-    return wlist,hlist
-
-def heapRemove(wlist, hlist):
-    if 1 == len(hlist) - 1:
-        hlist.pop()
-        wlist.pop()
-        return wlist,hlist
-    print(wlist,hlist)
-    hlist[1] = hlist.pop()
-    wlist[1] = wlist.pop()
-    for i in range(len(wlist)-1,0,-1):
-        print(wlist,hlist)
-        wlist, hlist = fixDown(wlist,hlist, i)
-    return wlist,hlist
 
 class BasicStats:
     """
@@ -89,30 +8,6 @@ class BasicStats:
     def __init__(self):
         pass
 
-    def slinkFreq(self, freqList):
-        """
-        This method takes in a list of words and returns a head of a linked list,
-        whose data is a list of information, with the first one the word and the
-        second one the number of that word.
-        """
-        '''
-        Runtime of this method is O(n^2), where n is the length of freqList.
-        '''
-        freqDict = {}
-
-        for keys in freqList:
-            if freqDict.get(keys) == None:
-                freqDict[keys] = freqList.count(keys)
-        aSLink=SLink()
-        for keys in freqDict:
-            aSLink.add(keys)
-        node=aSLink.head
-        while node!=None:
-            node.data.append(freqDict[node.data[0]])
-            node=node.next
-        
-        return aSLink.head
-    
     def createFreqMap(self, freqList):
         """
         This method takes in a list of words and returns a dictionary, whose
@@ -156,27 +51,6 @@ class BasicStats:
                     del topDict[minKey]
         return topDict
 
-    def LLTopN(self,head,n):
-        node=head
-        aSlink=SLink()
-        for i in range(n):
-            aSlink.add(node.data[0])
-            aSlink.head.data.append(node.data[1])
-            node=node.next
-        while node!=None:
-            sNode=aSlink.head
-            state=False
-            while sNode!=None and state==False:
-                if node.data[1]>sNode.data[1]:
-                    aSlink.remove(sNode.data[0])
-                    aSlink.add(node.data[0])
-                    aSlink.head.data.append(sNode.data[1])
-                    state=True
-                else:
-                    sNode=sNode.next
-            node=node.next
-        return aSlink.head
-
     def bottomN(self, freqDict, n):
         """
         This method takes in a dictionary of word frequencies and returns another
@@ -204,77 +78,158 @@ class BasicStats:
                     del bottomDict[maxKey]
         return bottomDict
 
+    def slinkFreq(self, freqList):
+        """
+        This method takes in a list of words and returns the head of a linked list,
+        whose first data is a word and second data is the frequency of the word.
+        """
+        '''
+        Runtime of this method is O(n^2), where n is the length of the freqList
+        '''
+        freqSlink = sllink.SLink()
 
+        for word in freqList:
+            runner = freqSlink.head
 
+            while runner != None:
+                if runner.data[0] == word:
+                    runner.data[1] += 1
+                    break
 
-    def topNHeap(self, wordlist, n,):
-        hlist = [0]
-        wlist = [0]
-        topNHlist = []
-        topNWlist = []
-        for word in wordlist:
+                runner = runner.next
+
+            if runner == None:
+                freqSlink.add([word, 1])
+
+        return freqSlink.head
+
+    def topNSlink(self, head, n):
+        """
+        This method takes in the head of a Sllink of word frequencies and returns
+        a SStack with the top n words and their frequencies.
+        """
+        '''
+        Runtime of this method is O(m*n),
+        where m is the length of freqSlink, and n is n.
+        '''
+        count = 0
+        runner = head
+        freqStack = sStack.SStack()
+
+        while runner != None:
+
+            if count < n:
+                freqStack.push(runner)
+
+            else:
+                minNode = freqStack.head
+                runner2 = freqStack.head
+
+                while runner2 != None:
+                    if runner2.data[1] < minNode.data[1]:
+                        minNode = runner2
+
+                    runner2 = runner2.next
+
+                if minNode.data[1] < runner.data[1]:
+                    minNode.data = runner.data
+
+            count += 1
+            runner = runner.next
+
+        return freqStack.head
+
+    def topNHeap(self, wordList, n):
+        """
+        This method takes in a list of words and returns a list with the top n words
+        and a list of their frequencies.
+        """
+        '''
+        The construction of the complete tree is O(n^2).
+        The process of taking out the top N is O(n).
+        '''
+        # Construct a list of unique words and their frequencies.
+        words = [None]
+        frequencies = [0]
+        for word in wordList:
             try:
-                index = wlist.index(word)
-                hlist[index] += 1
-            except ValueError:
-                wlist.append(word)
-                hlist.append(1)
-        for i in range(len(wlist)-1,0,-1):
-            wlist, hlist = fixDown(wlist,hlist, i)
-        for i in range(n):
-            topNHlist.append(hlist[1])
-            topNWlist.append(wlist[1])
-            wlist,hlist = heapRemove(wlist,hlist)
-        return topNWlist,topNHlist
-            
+                i = words.index(word)
+                frequencies[i] += 1
+            except:
+                words.append(word)
+                frequencies.append(1)
 
+        # Fix up the maximum frequency, add to the topN list, and remove from the heap.
+        topNWords = []
+        topNFreq = []
+        for num in range(n):
+            for i in range(len(words)-1, 1, -1):
+                if frequencies[i] > frequencies[i//2]:
+                    value = words[i]
+                    words[i] = words[i//2]
+                    words[i//2] = value
+                    value = frequencies[i]
+                    frequencies[i] = frequencies[i//2]
+                    frequencies[i//2] = value
 
-    
+            topNWords.append(words[1])
+            topNFreq.append(frequencies[1])
 
-    def bottomNHeap(self,heapList):
-        pass
+            words[1] = words.pop()
+            frequencies[1] = frequencies.pop()
 
+        return topNWords, topNFreq
 
+    def bottomNHeap(self, wordList, n):
+        """
+        This method takes in a list of words and returns a list with the bottom n words
+        and a list of their frequencies.
+        """
+        '''
+        The construction of the complete tree is O(n^2).
+        The process of taking out the bottom N is O(n).
+        '''
+        # Construct a list of unique words and their frequencies.
+        words = [None]
+        frequencies = [0]
+        for word in wordList:
+            try:
+                i = words.index(word)
+                frequencies[i] += 1
+            except:
+                words.append(word)
+                frequencies.append(1)
+
+        # Fix up the minimum frequency, add to the bottomN list, and remove from the heap.
+        bottomNWords = []
+        bottomNFreq = []
+        for num in range(n):
+            for i in range(len(words)-1, 1, -1):
+                if frequencies[i] < frequencies[i//2]:
+                    value = words[i]
+                    words[i] = words[i//2]
+                    words[i//2] = value
+                    value = frequencies[i]
+                    frequencies[i] = frequencies[i//2]
+                    frequencies[i//2] = value
+
+            bottomNWords.append(words[1])
+            bottomNFreq.append(frequencies[1])
+
+            words[1] = words.pop()
+            frequencies[1] = frequencies.pop()
+
+        return bottomNWords, bottomNFreq
 
 
 def main():
-    wordList = []
-    words = ['happy','sad','angry','blue','anxious']
-    for i in range(10):
-        word = random.choice(words)
-        wordList.append(word)
-    print(wordList)
-    a = BasicStats()
-    aList,bList = a.topNHeap(wordList,3)
-    print(aList,bList)
-main()
+    words = ['a', 'b', 'c', 'd', 'e']
+    wList = []
+    for i in range(20):
+        wList.append(random.choice(words))
 
+    print(wList)
+    s = BasicStats()
+    print(s.bottomNHeap(wList, 3))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-"""
-Better way to do both at the same time:
-    I am thinking about do both comparasons at the same time, meaning that when
-    looping through the elements of the dictionary, check if it is greater than
-    the smallest element of the topN dictionary or smaller than the largest element
-    of the bottomN dictionary. I haven't tried this out so am still not sure if
-    this will produce a smaller runtime.
-"""
+#main()
