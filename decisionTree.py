@@ -76,6 +76,8 @@ class DecisionTree:
         return twoDlist
 
 
+
+
 def getDif(twoDlist, attrCol):
     #attrDict是attrCOl这一列有几个不同的东西如small，medium，large
     #attrDict【small】中有个{}记录small的个数和一个{}，在small情况下有几个yes, no, ave等
@@ -100,6 +102,13 @@ def getDif(twoDlist, attrCol):
             entropy -= attrDict[attrType][1][targetType] / entire * math.log(attrDict[attrType][1][targetType] / entire, 2)
         entropyList.append(entropy*entire/len(twoDlist))
     return sum(entropyList), attrDict
+
+def main():
+    twoDlist = [['no', 'small'], ['no', 'small'], ['yes', 'small'], ['yes', 'medium'], ['yes', 'large'], ['no', 'medium'], ['no', 'large'], ['no', 'large'], ['yes', 'medium'], ['yes', 'large'], ['no', 'small'], ['no', 'small'], ['no', 'small'], ['no', 'medium'], ['no', 'medium']]
+
+    print(getDif(twoDlist, 1))
+
+
 
 def calculation(oneDlist, twoDlist):
     minIndex = 1

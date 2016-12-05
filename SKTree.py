@@ -6,7 +6,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
-from skleran.tree import export_graphviz
+from sklearn.tree import export_graphviz
 
 
 class SKTree:
@@ -20,7 +20,7 @@ class SKTree:
         """We assume that data is a 2D python list, the target in colum 0"""
         self.labels = labels
         self.depth = depth
-        
+
         x = [None]*len(data)
         y = [None]*len(data)
 
@@ -45,13 +45,12 @@ class SKTree:
                 t += [data[row][col]]
             x[row] = t
 
-        y = self.tree.predict(y)
+        y = self.tree.predict(x)
+        print(y)
         #Now you will have to get the values from y and move them to the targe column of data
-
+        for row in range(len(t)):
+            x[row][0] = y[row]
+        return x
 
     def toDot(self, filename):
         dot_data = export_graphviz(self.tree, out_file=filename, feature_names=self.labels)
-        
-        
-        
-        

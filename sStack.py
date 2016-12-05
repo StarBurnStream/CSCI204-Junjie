@@ -1,27 +1,20 @@
-import sLink
 class Node:
-    def __init__(self):
-        self.next = None
-        self.data = []
-
+    data = None
+    next = None
 
 class SStack:
     def __init__(self):
-        self.head=None
-        self.size=0
+        self.head = None
 
-    def push(self,item):
-        if self.size==0:
-            self.head=item
-        else:
-            item.next=self.head
-            self.head=item
-        self.size+=1
-            
+    def push(self, newNode):
+        newNode.next = self.head
+        self.head = newNode
+
     def pop(self):
-        if self.size!=0:
-            a=self.head
-            self.head=self.head.next
-            a.next=None
-            self.size-=1
-        return a
+        if self.head == None:
+            return self.head
+
+        else:
+            popNode = self.head
+            self.head = self.head.next
+            return popNode

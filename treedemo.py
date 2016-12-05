@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.tree import export_graphviz  #can be used to make a dot file
-import pydotplus
+#import pydotplus
 
 
 df = pd.read_csv('cardata.csv')
